@@ -20,35 +20,59 @@ function operate( _a, _operator, _b) {
     }
 }
 
-console.log(operate("/", 6, 3));
 
 // make the buttons responsive
 const buttons = document.querySelectorAll('input');
+// the equals sign runs the operator function
+const equals = document.querySelector(".green");
+// the display section
+const display = document.querySelector("p");
 
 let leftSideEquation = [];
+let rightSide = [];
+let symbol = '';
 
 buttons.forEach((button) => {
     button.addEventListener('click', function (e) {
-       //stores the numbers and operators into an array
-        leftSideEquation.push(button.value);
-
-        console.log(leftSideEquation);
-    });
+        // on every button instead of equals, add the button to an array
+        if (button.value == "=" || button.value == "Del"){
+        } else {
+            leftSideEquation.push(button.value);
+            display.innerText = leftSideEquation.join('');
+    };
+});
 });
 
-// the equals sign runs the operator function
-const equals = document.querySelector(".green");
 
 equals.addEventListener('click', function (e) {
-    // sort out the array before calling as arguments/parameters
-    firstValue = parseInt(leftSideEquation[0]);
-    symbol = leftSideEquation[1];
-    secondValue = parseInt(leftSideEquation[2]);
+    // loop the array and when it sees the symbol splice it there
+    // save the split as a second array
+    for (i = 0; i < leftSideEquation.length; i++){
+        const element = leftSideEquation[i]
+        if(element === "+"|| element === "*"||
+        element === "-"||element === "/"){
+            rightSide = leftSideEquation.splice(i, leftSideEquation.length);
+        }
+        
+    }
+    // join the left side into a string, then turn it into a number
+    leftSideEquation = parseInt(leftSideEquation.join(''));
+    // the symbol will be second array[0] so take that value out of the second array
+    symbol = rightSide.splice(0, 1);
+    rightSide = parseInt(rightSide.join(''));
 
-    console.log(operate(firstValue, symbol, secondValue));
+    answer = operate(leftSideEquation, symbol, rightSide).toFixed(2);
+
+    display.innerText = answer;
+    // keep the answer so if you want to do further maths you can
+    leftSideEquation = [answer];
+});
+
+// the clear button
+const clear = document.querySelector(".red");
+clear.addEventListener('click', () => {
     leftSideEquation = [];
+    display.innerText = "___________________";
 });
 
 
-
-console.log(operate(1, "+", 3));
